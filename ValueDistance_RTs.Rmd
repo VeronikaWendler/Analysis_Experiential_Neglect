@@ -543,7 +543,7 @@ tab_model(fitPie, p.val = "satterthwaite")
 ggplot(my_data_pie, aes(x = selected_imageEXP2, y = elapsed_timeEXP2)) + 
   geom_boxplot(color = "darkorchid", fill = "#d7745b", size = 0.8) + 
   ylim(0, 1.5) + 
-  labs(title = "Boxplot of Elapsed Time by Selected Pie Images ES", 
+  labs(title = "Boxplot of Elapsed Time by Selected Pie Images", 
        x = "Selected Pie Images", 
        y = "Elapsed Time") + 
   theme_gray()
@@ -560,7 +560,7 @@ my_data_pie <- my_data_pie %>%
 
 ggplot(my_data_pie, aes(x = selected_imageEXP2, y = elapsed_timeEXP2, fill = selected_imageEXP2)) +
   geom_violin(trim = FALSE) +
-  labs(title = "Violin Plot of Elapsed Time by Pie Images ES",
+  labs(title = "Violin Plot of Elapsed Time by Pie Images",
        x = "Selected Pie Images",
        y = "Elapsed Time") + theme_minimal()
 
@@ -582,6 +582,7 @@ my_data <- read.csv("C:/Users/Asus/Desktop/Aberdeen_Uni/cap/Experimental_Design_
 
 my_dataSub <- my_data[, c("elapsed_timeEXP2", "value_differences_EXP2", "SubID", "selected_imageEXP2", "outcomeArrayEXP2")]
 
+# Extract data for correct and wrong decisions, dropping NA values
 correct_data <- my_dataSub %>% filter(outcomeArrayEXP2 == 1) %>% pull(elapsed_timeEXP2) %>% na.omit()
 
 wrong_data <- my_dataSub %>% filter(outcomeArrayEXP2 == 0) %>% pull(elapsed_timeEXP2) %>% na.omit()
@@ -605,7 +606,7 @@ data_summary <- data.frame(
 ggplot(data_summary, aes(x = Labels, y = Mean, fill = Labels)) +
   geom_bar(stat = "identity", position = position_dodge()) +
   geom_errorbar(aes(ymin = Mean - SEM, ymax = Mean + SEM), width = 0.2, position = position_dodge(0.9)) +
-  labs(title = "Mean Reaction Time for Correct and Wrong Decisions Across All Participants ES",
+  labs(title = "Mean Reaction Time for Correct and Wrong Decisions Across All Participants",
        y = "Mean Reaction Time") +
   theme_minimal() +
   theme(legend.position = "none")
