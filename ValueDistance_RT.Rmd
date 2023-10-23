@@ -566,3 +566,15 @@ ggplot(data_summary, aes(x = Labels, y = Mean, fill = Labels)) +
   labs(title = "Mean Reaction Time for Correct and Wrong Decisions Across All Participants", y = "Mean Reaction Time") + theme_minimal() + theme(legend.position = "none")
 ```
 
+### TO DO:  ### 
+
+- R2 is not amazing ( =.32) which means 32% of the variability in the dependent variable (DV), is explained by the Value Differences predictors and Pie type predictors in the lmer model
+
+- look at other models: 
+ 1. GLM or GLMM for non-normal variance  
+
+ 2. GAM
+
+ 3. Regression Trees: complex nonlinear relationships 
+
+ 4. Random Forests or Gradient Boosting Models: machine learning techniques that capture complex relationships
