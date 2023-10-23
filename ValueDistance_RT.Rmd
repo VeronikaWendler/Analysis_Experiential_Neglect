@@ -576,4 +576,4 @@ ggplot(data_summary, aes(x = Labels, y = Mean, fill = Labels)) +
 
  3. Regression Trees: complex nonlinear relationships 
 
- 4. Random Forests or Gradient Boosting Models: machine learning techniques that capture complex relationships
+ 4. Random Forests or Gradient Boosting Models
