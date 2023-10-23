@@ -565,7 +565,6 @@ ggplot(data_summary, aes(x = Labels, y = Mean, fill = Labels)) +
   geom_errorbar(aes(ymin = Mean - SEM, ymax = Mean + SEM), width = 0.2, position = position_dodge(0.9)) +
   labs(title = "Mean Reaction Time for Correct and Wrong Decisions Across All Participants", y = "Mean Reaction Time") + theme_minimal() + theme(legend.position = "none")
 ```
-
 ### TO DO:  ### 
 
 - R2 is not amazing ( =.32) which means 32% of the variability in the dependent variable (DV), is explained by the Value Differences predictors and Pie type predictors in the lmer model
