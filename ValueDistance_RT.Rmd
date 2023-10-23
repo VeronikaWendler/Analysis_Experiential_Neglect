@@ -1,0 +1,568 @@
+---
+title: "RT_Ananlysis_R"
+output: html_document
+date: "2023-10-17"
+---
+
+
+
+### Analysis of RTs for different Value distances ###
+
+```{r}
+install.packages("emmeans") 
+install.packages("ggpubr")
+install.packages("ggplot2")
+install.packages("tidyverse")
+install.packages("plotly")
+install.packages("colorspace")
+install.packages("ggsignif")
+install.packages("gt")
+install.packages("dplyr")
+install.packages("broom")
+install.packages("sjPlot")
+install.packages("sjstats")
+install.packages("xtable")
+install.packages("dplyr")
+install.packages("tidyr")
+install.packages("sjPlot")
+install.packages("brms")
+install.packages("glmmTMB")
+install.packages("MASS")
+install.packages("gplots")
+install.packages("car")
+install.packages("stats")
+install.packages("lattice")
+install.packages("lme4")
+install.packages("emmeans")
+install.packages("lmerTest")
+install.packages("Matrix")
+install.packages("carData")
+install.packages("multcomp")
+install.packages("TH.data")
+install.packages("mvtnorm")
+install.packages("survival")
+```
+
+```{r}
+rm(list = ls(all.names = TRUE))
+
+```
+
+
+```{r}
+#rm(list = ls(all.names = TRUE))
+
+#libs 
+library("emmeans") 
+library("ggpubr")
+library("ggplot2")
+library("tidyverse")
+library("plotly")
+library("colorspace")
+library("ggsignif")
+library("gt")
+library("dplyr")
+library("broom")
+library("sjPlot")
+library("sjstats")
+library("xtable")
+library("dplyr")
+library("tidyr")
+library("knitr")
+library("sjPlot")
+library("brms")
+library("glmmTMB")
+library("MASS")
+library("gplots")
+library("car")
+library("stats")
+library("lattice")
+library("carData")
+library("Matrix")
+library(lme4)
+library(emmeans)
+library(lmerTest)
+library(ggplot2)
+library(ggsignif)
+library(lme4)
+library(emmeans)
+library(sjPlot)
+library("multcomp")
+#library("TH.data")
+#library("mvtnorm")
+#library("survival")
+```
+
+```{python}
+import pandas as pd
+import numpy as np
+
+df = pd.read_csv('Participant_1_20_Data_Kopie.csv', sep=';')
+
+value_differences = []
+
+for index, row in df.iterrows():
+    Prob_Left = row['left_probabilityEXP2']
+    Prob_Right = row['right_probabilityEXP2']
+
+    if (Prob_Right == 0.125000000000000) & (Prob_Left == 0.250000000000000) or (Prob_Left == 0.125000000000000) & (Prob_Right == 0.250000000000000):
+        VD = 11
+    elif (Prob_Right == 0.250000000000000) & (Prob_Left == 0.375000000000000) or (Prob_Left == 0.250000000000000) & (Prob_Right == 0.375000000000000):
+        VD = 12
+    elif (Prob_Right == 0.375000000000000) & (Prob_Left == 0.500000000000000) or (Prob_Left == 0.375000000000000) & (Prob_Right == 0.500000000000000):
+        VD = 13
+    elif (Prob_Right == 0.500000000000000) & (Prob_Left == 0.625000000000000) or (Prob_Left == 0.500000000000000) & (Prob_Right == 0.625000000000000):
+        VD = 14
+    elif (Prob_Right == 0.625000000000000) & (Prob_Left == 0.750000000000000) or (Prob_Left == 0.625000000000000) & (Prob_Right == 0.750000000000000):
+        VD = 15
+    elif (Prob_Right == 0.750000000000000) & (Prob_Left == 0.875000000000000) or (Prob_Left == 0.750000000000000) & (Prob_Right == 0.875000000000000):
+        VD = 16
+    elif (Prob_Right == 0.125000000000000) & (Prob_Left == 0.375000000000000) or (Prob_Left == 0.125000000000000) & (Prob_Right == 0.375000000000000):
+        VD = 21
+    elif (Prob_Right == 0.250000000000000) & (Prob_Left == 0.500000000000000) or (Prob_Left == 0.250000000000000) & (Prob_Right == 0.500000000000000):
+        VD = 22
+    elif (Prob_Right == 0.375000000000000) & (Prob_Left == 0.625000000000000) or (Prob_Left == 0.375000000000000) & (Prob_Right == 0.625000000000000):
+        VD = 23
+    elif (Prob_Right == 0.500000000000000) & (Prob_Left == 0.750000000000000) or (Prob_Left == 0.500000000000000) & (Prob_Right == 0.750000000000000):
+        VD = 24
+    elif (Prob_Right == 0.625000000000000) & (Prob_Left == 0.875000000000000) or (Prob_Left == 0.625000000000000) & (Prob_Right == 0.875000000000000):
+        VD = 25
+    elif (Prob_Right == 0.125000000000000) & (Prob_Left == 0.500000000000000) or (Prob_Left == 0.125000000000000) & (Prob_Right == 0.500000000000000):
+        VD = 31
+    elif (Prob_Right == 0.250000000000000) & (Prob_Left == 0.625000000000000) or (Prob_Left == 0.250000000000000) & (Prob_Right == 0.625000000000000):
+        VD = 32
+    elif (Prob_Right == 0.375000000000000) & (Prob_Left == 0.750000000000000) or (Prob_Left == 0.375000000000000) & (Prob_Right == 0.750000000000000):
+        VD = 33
+    elif (Prob_Right == 0.500000000000000) & (Prob_Left == 0.875000000000000) or (Prob_Left == 0.500000000000000) & (Prob_Right == 0.875000000000000):
+        VD = 34
+    elif (Prob_Right == 0.125000000000000) & (Prob_Left == 0.625000000000000) or (Prob_Left == 0.125000000000000) & (Prob_Right == 0.625000000000000):
+        VD = 41
+    elif (Prob_Right == 0.250000000000000) & (Prob_Left == 0.750000000000000) or (Prob_Left == 0.250000000000000) & (Prob_Right == 0.750000000000000):
+        VD = 42
+    elif (Prob_Right == 0.375000000000000) & (Prob_Left == 0.875000000000000) or (Prob_Left == 0.375000000000000) & (Prob_Right == 0.875000000000000):
+        VD = 43
+    elif (Prob_Right == 0.125000000000000) & (Prob_Left == 0.750000000000000) or (Prob_Left == 0.125000000000000) & (Prob_Right == 0.750000000000000):
+        VD = 51
+    elif (Prob_Right == 0.250000000000000) & (Prob_Left == 0.875000000000000) or (Prob_Left == 0.250000000000000) & (Prob_Right == 0.875000000000000):
+        VD = 52
+    elif (Prob_Right == 0.125000000000000) & (Prob_Left == 0.875000000000000) or (Prob_Left == 0.125000000000000) & (Prob_Right == 0.875000000000000):
+        VD = 61
+    elif Prob_Right == Prob_Left:
+        VD = 71
+    else:
+        VD = None
+    
+    value_differences.append(VD)
+
+df['value_differences_EXP2'] = value_differences
+#df.to_csv('VD2_Participant_1_20_Data.csv', sep=';', index=False)
+
+```
+
+```{r}
+my_data <- read.csv("C:/Users/Asus/Desktop/Aberdeen_Uni/cap/Experimental_Design_03.07.23/Practice_For_Psychtoolbox/EXP4/Exp_Neglect_28_08_23_Final/Analysis_Scripts/Git_analysis/SubID_1_22/VD_Participant_1_22_Data.csv", header = TRUE, sep = ";")
+
+my_dataSub <- my_data[ , c("elapsed_timeEXP2",	"value_differences_EXP2", "SubID")]
+
+#my_data$param <- factor(my_data$value_differences_EXP2, levels = c(11, 12, 13, 14, 15 ,16, 21, 22, 23, 24, 25, 31, 32, 33, 34, 41, 42, 43, 51, 52, 61, 71), #labels = c("very_hard","hard","middle","moderate", "easy", "very_easy", "eq"))
+
+# from my python file
+#very_hard = [11, 12, 13, 14, 15 ,16]     e.g. 0,125 vs 0,25
+#hard =      [21, 22, 23, 24, 25]         e.g. 0,125 vs 0,375
+#middle =    [31, 32, 33, 34]             e.g. 0,125 vs 0,5
+#moderate =  [41, 42, 43]                 e.g. 0,125 vs 0,625
+#easy =      [51, 52]                     e.g. 0,125 vs 0,75
+#very_easy = [61]                         e.g. 0,125 vs 0,75
+#eq = [71]                                probability on the right == probability on the left
+
+
+categorize_value <- function(value) {
+  if (grepl("^1", value)) {
+    return("very_hard")
+  } else if (grepl("^2", value)) {
+    return("hard")
+  } else if (grepl("^3", value)) {
+    return("middle")
+  } else if (grepl("^4", value)) {
+    return("moderate")
+  } else if (grepl("^5", value)) {
+    return("easy")
+  } else if (grepl("^6", value)) {
+    return("very_easy")
+  } else {
+    return("eq")
+  }
+}
+
+my_data$param <- sapply(as.character(my_data$value_differences_EXP2), categorize_value)
+head(my_data)
+
+```
+
+
+```{r}
+
+my_data$param <- factor(my_data$param)
+
+# Anova and lmer (glm)
+res.aov1 <- aov(elapsed_timeEXP2 ~ param, data = my_data)
+summary (res.aov1)
+
+fit1 = lmer( formula = elapsed_timeEXP2 ~ param +(1|SubID), data = my_data)
+print(fit1)
+summary(fit1)
+
+my_data$param <- factor(my_data$param)
+
+#beloved table
+#post hoc of lmer 
+emmeans(fit1, list(pairwise ~param), adjust = "tukey")
+emm_options(lmerTest.limit = 763, lmer.df = "satterthwaite")
+tab_model(fit1, p.val = "satterthwaite")                     
+summary(fit1)
+
+```
+```{r}
+my_data$param <- factor(my_data$param, levels = c("very_hard", "hard", "middle", "moderate", "easy", "very_easy", "eq"))
+
+# ggboxplot with colors
+ggboxplot(my_data, x = "param", y = "elapsed_timeEXP2", fill = "#69b3a2") + ylim(0, 7) + theme_minimal() + geom_boxplot(color = "#69b3a2")
+ 
+```
+
+
+### let's do some Z scoring and outlier removal .. ###
+
+```{r}
+# Interquartile range scaling
+
+Q1 <- quantile(my_data$elapsed_timeEXP2, 0.25)
+Q3 <- quantile(my_data$elapsed_timeEXP2, 0.75)
+IQR <- Q3 - Q1
+lower_bound <- Q1 - 1.5 * IQR
+upper_bound <- Q3 + 1.5 * IQR
+
+my_data <- my_data %>% filter(!(elapsed_timeEXP2 < lower_bound | elapsed_timeEXP2 > upper_bound))
+
+# Z-score normalization
+my_data$normalized_elapsed_timeEXP2 <- scale(my_data$elapsed_timeEXP2)
+```
+
+```{r}
+
+res.aov1 <- aov(normalized_elapsed_timeEXP2 ~ param, data = my_data)
+summary(res.aov1)
+
+fit1 <- lmer(formula = normalized_elapsed_timeEXP2 ~ param + (1|SubID), data = my_data)
+print(fit1)
+summary(fit1)
+
+my_data$param <- factor(my_data$param)
+
+# Post hoc analysis of lmer
+emmeans(fit1, list(pairwise ~ param), adjust = "tukey")
+emm_options(lmerTest.limit = 763, lmer.df = "satterthwaite")
+tab_model(fit1, p.val = "satterthwaite")                     
+summary(fit1)
+
+```
+
+```{r}
+ggplot(my_data, aes(x = param, y = normalized_elapsed_timeEXP2)) + 
+  geom_boxplot(color = "darkorchid", fill = "#69b3a2",size = 0.8) + 
+  ylim(0, 3.5) + labs(title = "Boxplot of Normalized Elapsed Time ES Phase", x = "Value Difference Levels", y = "Normalized Elapsed Time ES") + theme_gray() 
+```
+
+```{r}
+
+ggplot(my_data, aes(x = param, y = normalized_elapsed_timeEXP2)) +
+  geom_violin(color = "darkorchid",fill = "#69b3a2",size = 0.6, draw_quantiles = c(0.25, 0.5, 0.75)) + 
+  ylim(0, 3.5) +  # here, we can adjust y-axis limits which might be better for viusalzation + comparison purposes
+  labs(title = "Violin Plot of Normalized Elapsed Time ES Phase", x = "Value Difference Levels", y = "Normalized Elapsed Time ES") + theme_gray()
+```
+
+## Learning Phase - Value Difference Levels and RTs - 
+
+```{python}
+import pandas as pd
+import numpy as np
+
+df = pd.read_csv('VD_Participant_1_22_Data.csv', sep=';')
+
+value_differencesLE = []
+
+for index, row in df.iterrows():
+    Prob_Left = row['left_ProbabilityEXP']
+    Prob_Right = row['right_ProbabilityEXP']
+
+    if (Prob_Right == 0.375000000000000) & (Prob_Left == 0.625000000000000) or (Prob_Left == 0.375000000000000) & (Prob_Right == 0.625000000000000):
+        VD = 1
+    elif (Prob_Right == 0.250000000000000) & (Prob_Left == 0.750000000000000) or (Prob_Left == 0.250000000000000) & (Prob_Right == 0.750000000000000):
+        VD = 2
+    elif (Prob_Right == 0.125000000000000) & (Prob_Left == 0.875000000000000) or (Prob_Left == 0.125000000000000) & (Prob_Right == 0.875000000000000):
+        VD = 3
+    else:
+        VD = None
+    
+    value_differencesLE.append(VD)
+
+df['value_differences_LE'] = value_differencesLE
+df.to_csv('VD3_Participant_1_22_Data.csv', sep=';', index=False)
+
+```
+
+```{r}
+my_data <- read.csv("C:/Users/Asus/Desktop/Aberdeen_Uni/cap/Experimental_Design_03.07.23/Practice_For_Psychtoolbox/EXP4/Exp_Neglect_28_08_23_Final/Analysis_Scripts/Git_analysis/SubID_1_22/VD_Participant_1_22_Data.csv", header = TRUE, sep = ";")
+
+my_dataSub <- my_data[ , c("elapsedTimeEXP",	"value_differences_LE", "SubID")]
+
+
+# from my python file
+#hard =      [1.0]             0,375 vs 0.625
+#mid  =      [2.0]             0,25 vs 0.75
+#easy =      [3.0]             0,125 vs 0,875
+
+
+categorize_value <- function(value) {
+  if (grepl("^1", value)) {
+    return("hard")
+  } else if (grepl("^2", value)) {
+    return("mid")
+  } else if (grepl("^3", value)) {
+    return("easy")
+  }
+}
+
+my_data$param <- sapply(as.character(my_data$value_differences_LE), categorize_value)
+head(my_data)
+
+```
+
+```{r}
+str(my_data)
+
+my_data$param <- factor(my_data$param, levels = c("hard", "mid", "easy"))
+
+levels(my_data$param)
+```
+
+```{r}
+my_data$param <- factor(my_data$param)
+
+res.aov1 <- aov(elapsedTimeEXP ~ param, data = my_data)
+summary (res.aov1)
+
+TukeyHSD(res.aov1, which = "param")
+emmeans(res.aov1, list(pairwise ~param), adjust = "tukey")
+
+#beloved table
+tab_model(res.aov1, p.val = "satterthwaite")                     
+summary (res.aov1)
+
+# lmer == glm in python
+fit1 = lmer(formula = elapsedTimeEXP ~ param +(1|SubID), data = my_data)
+print(fit1)
+summary(fit1)
+
+my_data$param <- factor(my_data$param)
+
+#beloved table
+#post hoc of lmer 
+emmeans(fit1, list(pairwise ~param), adjust = "tukey")
+emm_options(lmerTest.limit = 763, lmer.df = "satterthwaite")
+tab_model(fit1, p.val = "satterthwaite")                     
+summary(fit1)
+```
+```{r}
+emm_options(lmerTest.limit = 1503)
+
+#this doesn't work
+emm <- emmeans(fit1, ~ param, data = my_data, contrasts = list(pairs = list( c("easy", "hard"), c("mid", "hard"))))
+pairs(emm, by = NULL, adjust = "tukey")
+
+```
+
+
+### Z-Scoring Data ###
+
+```{r}
+
+numeric_columns <- sapply(my_data, is.numeric)
+
+# Z-score
+my_data[numeric_columns] <- lapply(my_data[numeric_columns], scale)
+my_data$param <- factor(my_data$param)
+
+res.aov1 <- aov(elapsedTimeEXP ~ param, data = my_data)
+summary(res.aov1)
+
+TukeyHSD(res.aov1, which = "param")
+emmeans(res.aov1, list(pairwise ~ param), adjust = "tukey")
+
+# beloved table
+tab_model(res.aov1, p.val = "satterthwaite")                     
+summary(res.aov1)
+
+fit1 <- lmer(formula = elapsedTimeEXP ~ param + (1 | SubID), data = my_data)
+print(fit1)
+summary(fit1)
+
+# Post hoc r 
+emmeans(fit1, list(pairwise ~ param), adjust = "tukey")
+emm_options(lmerTest.limit = 763, lmer.df = "satterthwaite")
+tab_model(fit1, p.val = "satterthwaite")                     
+summary(fit1)
+
+```
+
+### https://stackoverflow.com/questions/66275572/r-posthoc-comparison-for-linear-mixed-effects-model
+
+```{r}
+LME = lmer(formula = elapsedTimeEXP ~ param +(1|SubID), data = my_data)
+summary(LME)
+#Problematic - maybe later 
+
+#library(multcomp)
+#summary(glht(LME, linfct = mcp(param = "Tukey"), test = adjusted("none")))
+
+#summary(glht(LME, linfct=c("Variable3-Variable2=0")))
+#summary(glht(LME, linfct= mcp(param="Tukey")),test=adjusted("none"))
+
+#summary(glht(LME, linfct=c("Variable2=0","Variable3=0", "Variable3-Variable2=0")))
+#summary(glht(LME, linfct=mcp(Variable="Tukey")))
+
+```
+```{r}
+my_data$param <- factor(my_data$param, levels = c("easy", "mid", "hard"))
+
+# creating the plot with reordered levels as they were unstructured 
+ggplot(my_data, aes(x = param, y = elapsedTimeEXP)) + 
+  geom_boxplot(color = "darkorchid", fill = "#69b3a2", size = 0.8) + ylim(0, 3.5) + 
+  labs(title = "Boxplot of Elapsed Time LE Phase", x = "Value Difference Levels", y = "Elapsed Time ES") + theme_gray()
+```
+
+```{r}
+numeric_columns <- sapply(my_data, is.numeric)
+
+# Z-score
+my_data[numeric_columns] <- lapply(my_data[numeric_columns], scale)
+my_data$param <- factor(my_data$param, levels = c("easy", "mid", "hard"))
+
+res.aov1 <- aov(elapsedTimeEXP ~ param, data = my_data)
+summary(res.aov1)
+
+TukeyHSD(res.aov1, which = "param")
+emmeans(res.aov1, list(pairwise ~ param), adjust = "tukey")
+
+# beloved table
+tab_model(res.aov1, p.val = "satterthwaite")                     
+summary(res.aov1)
+
+fit1 <- lmer(formula = elapsedTimeEXP ~ param + (1 | SubID), data = my_data)
+print(fit1)
+summary(fit1)
+
+# Post hoc r 
+emmeans(fit1, list(pairwise ~ param), adjust = "tukey")
+emm_options(lmerTest.limit = 763, lmer.df = "satterthwaite")
+tab_model(fit1, p.val = "satterthwaite")                     
+summary(fit1)     
+
+```
+
+
+
+
+
+
+
+## Reaction Time Differences - Pie types - ###
+
+
+
+
+
+
+
+```{r}
+my_data <- read.csv("C:/Users/Asus/Desktop/Aberdeen_Uni/cap/Experimental_Design_03.07.23/Practice_For_Psychtoolbox/EXP4/Exp_Neglect_28_08_23_Final/Analysis_Scripts/Git_analysis/SubID_1_22/VD_Participant_1_22_Data.csv", header = TRUE, sep = ";")
+
+my_dataSub <- my_data[, c("elapsed_timeEXP2", "value_differences_EXP2", "SubID", "selected_imageEXP2")]
+print(my_dataSub)
+
+selectedIM <- factor(my_data$selected_imageEXP2, levels = c("'Pie1'", "'Pie2'", "'Pie3'", "'Pie4'", "'Cycle'", "'Menu'", "'Intersection'", "'Fire'", "'Mark'", "'Magnet'"))
+
+```
+
+```{r}
+selected_pie_images <- c("'Pie1'", "'Pie2'", "'Pie3'", "'Pie4'")
+my_data_pie <- my_data[my_data$selected_imageEXP2 %in% selected_pie_images, ]
+
+# pie images
+print(my_data_pie)
+
+```
+```{r}
+selected_pie_images <- c("'Pie1'", "'Pie2'", "'Pie3'", "'Pie4'")
+my_data_pie <- my_data[my_data$selected_imageEXP2 %in% selected_pie_images, ]
+
+print(my_data_pie)
+
+fitPie <- lmer(elapsed_timeEXP2 ~ selected_imageEXP2 + (1 | SubID), data = my_data_pie)
+print(summary(fitPie))
+emmeans(fitPie, pairwise ~ selected_imageEXP2, adjust = "tukey")
+tab_model(fitPie, p.val = "satterthwaite")
+```
+
+```{r}
+
+ggplot(my_data_pie, aes(x = selected_imageEXP2, y = elapsed_timeEXP2)) + geom_boxplot(color = "darkorchid", fill = "#d7745b", size = 0.8) + 
+  ylim(0, 1.5) + labs(title = "Boxplot of Elapsed Time by Selected Pie Images", x = "Selected Pie Images", y = "Elapsed Time") + theme_gray()
+```
+
+```{r}
+
+my_data_pie <- my_data_pie %>%
+  group_by(selected_imageEXP2) %>%
+  mutate(z_score = scale(elapsed_timeEXP2))
+
+ggplot(my_data_pie, aes(x = selected_imageEXP2, y = elapsed_timeEXP2, fill = selected_imageEXP2)) + geom_violin(trim = FALSE) +
+  labs(title = "Violin Plot of Elapsed Time by Pie Images", x = "Selected Pie Images", y = "Elapsed Time") + theme_minimal()
+
+fitPie <- lmer(elapsed_timeEXP2 ~ selected_imageEXP2 + (1 | SubID), data = my_data_pie)
+print(summary(fitPie))
+emmeans(fitPie, pairwise ~ selected_imageEXP2, adjust = "tukey")
+tab_model(fitPie, p.val = "satterthwaite")
+
+```
+
+### Are there significant differences in RTs for correct and wrong decisions ??? ###
+
+
+```{r}
+my_data <- read.csv("C:/Users/Asus/Desktop/Aberdeen_Uni/cap/Experimental_Design_03.07.23/Practice_For_Psychtoolbox/EXP4/Exp_Neglect_28_08_23_Final/Analysis_Scripts/Git_analysis/SubID_1_22/VD_Participant_1_22_Data.csv", header = TRUE, sep = ";")
+
+my_dataSub <- my_data[, c("elapsed_timeEXP2", "value_differences_EXP2", "SubID", "selected_imageEXP2", "outcomeArrayEXP2")]
+
+#correct and wrong decisions
+correct_data <- my_dataSub %>% filter(outcomeArrayEXP2 == 1) %>% pull(elapsed_timeEXP2) %>% na.omit()
+wrong_data <- my_dataSub %>% filter(outcomeArrayEXP2 == 0) %>% pull(elapsed_timeEXP2) %>% na.omit()
+
+# mean and standard error
+mean_correct <- mean(correct_data)
+mean_wrong <- mean(wrong_data)
+sem_correct <- sd(correct_data) / sqrt(length(correct_data))
+sem_wrong <- sd(wrong_data) / sqrt(length(wrong_data))
+
+t_test <- t.test(correct_data, wrong_data)
+print(t_test)
+
+
+data_summary <- data.frame( Labels = c("Correct Decisions", "Wrong Decisions"), Mean = c(mean_correct, mean_wrong), SEM = c(sem_correct, sem_wrong))
+
+ggplot(data_summary, aes(x = Labels, y = Mean, fill = Labels)) +
+  geom_bar(stat = "identity", position = position_dodge()) +
+  geom_errorbar(aes(ymin = Mean - SEM, ymax = Mean + SEM), width = 0.2, position = position_dodge(0.9)) +
+  labs(title = "Mean Reaction Time for Correct and Wrong Decisions Across All Participants", y = "Mean Reaction Time") + theme_minimal() + theme(legend.position = "none")
+```
+
